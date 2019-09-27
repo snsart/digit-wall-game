@@ -1,0 +1,24 @@
+.Dialog{
+	width: 400px;
+	margin-bottom: 20px;
+	border-bottom: solid  1px #999999;
+}
+
+.DialogHeader{
+	font-size: 30px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #6f001b;
+	padding: 10px 20px;
+}
+
+.DialogBody{
+	padding: 10px;
+	border-bottom: 1px solid #cccccc;
+}
+
+
+.DialogFooter{
+	padding: 10px 25px;
+	background-color: #cccccc;
+}
