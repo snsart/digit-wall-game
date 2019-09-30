@@ -191,6 +191,326 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /*React.PropTypes 已经从React v15.5迁移了，所以现在用prop-types库
+                                                                                                                                                                                                                                                                  npm install prop-types -S*/
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function Button(props) {
+	var cssclasses = (0, _classnames2.default)('Button', props.className);
+	return props.href ? _react2.default.createElement('a', _extends({}, props, { className: cssclasses })) : _react2.default.createElement('button', _extends({}, props, { className: cssclasses }));
+}
+
+Button.propTypes = {
+	href: _propTypes.PropTypes.string
+};
+
+exports.default = Button;
+},{"classnames":6,"prop-types":11,"react":21}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _Piece = require('./Piece');
+
+var _Piece2 = _interopRequireDefault(_Piece);
+
+var _Button = require('./Button');
+
+var _Button2 = _interopRequireDefault(_Button);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*React.PropTypes 已经从React v15.5迁移了，所以现在用prop-types库
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               npm install prop-types -S*/
+
+var Map = function (_Component) {
+	_inherits(Map, _Component);
+
+	function Map(props) {
+		_classCallCheck(this, Map);
+
+		var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
+
+		_this.state = {
+			data: props.defaultData,
+			colorable: false
+		};
+		return _this;
+	}
+
+	/*--------------生命周期函数-----------------*/
+
+	_createClass(Map, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+			this.setState({ data: nextProps.data });
+		}
+
+		//在render()函数执行完毕，且更新的组件同步到DOM后立即调用
+
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			this._getPieces();
+		}
+
+		//在新节点插入DOM结构之后触发
+
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this._getPieces();
+		}
+	}, {
+		key: 'hasComplete',
+		value: function hasComplete() {
+			var _getPieces2 = this._getPieces(),
+			    _getPieces3 = _slicedToArray(_getPieces2, 3),
+			    pieces = _getPieces3[0],
+			    piecesWithNum = _getPieces3[1],
+			    blackPieces = _getPieces3[2];
+
+			var white = this._whiteSpaceComplete(piecesWithNum, pieces);
+			var black = this._blackSpaceComplete(blackPieces, pieces);
+			var existSquare = this._existBlacePieceSquare(blackPieces, pieces);
+
+			if (white && black && !existSquare) {
+				console.log("完成");
+				return true;
+			} else {
+				console.log("未完成");
+				return false;
+			}
+		}
+	}, {
+		key: '_whiteSpaceComplete',
+		value: function _whiteSpaceComplete(piecesWithNum, pieces) {
+			for (var i = 0; i < piecesWithNum.length; i++) {
+				var piece = piecesWithNum[i];
+				var value = piece.getValue();
+				var finded = [piece];
+				this._addConnectPiecesNumberBy(piece, pieces, finded);
+				if (finded.length != value) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}, {
+		key: '_blackSpaceComplete',
+		value: function _blackSpaceComplete(blackPieces, pieces) {
+			if (blackPieces.length > 0) {
+				var piece = blackPieces[0];
+				var finded = [piece];
+				this._addConnectPiecesNumberBy(piece, pieces, finded);
+				if (finded.length != blackPieces.length) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}, {
+		key: '_existBlacePieceSquare',
+		value: function _existBlacePieceSquare(blackPieces, pieces) {
+			for (var i = 0; i < blackPieces.length; i++) {
+				var piece = blackPieces[i];
+				if (this._isBlackPieceSquare(piece, pieces)) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}, {
+		key: '_isBlackPieceSquare',
+		value: function _isBlackPieceSquare(piece, pieces) {
+			if (piece.getColor() != 0) {
+				return false;
+			}
+			var row = piece.props.row,
+			    col = piece.props.col;
+			var totalRow = pieces.length,
+			    totalCol = pieces[0].length;
+
+			var right = col + 1 < totalCol ? pieces[row][col + 1] : null;
+			var bottom = row + 1 < totalRow ? pieces[row + 1][col] : null;
+			var rightBottom = col + 1 < totalCol && row + 1 < totalRow ? pieces[row + 1][col + 1] : null;
+
+			if (right && right.getColor() == 0 && bottom && bottom.getColor() == 0 && rightBottom && rightBottom.getColor() == 0) {
+				return true;
+			}
+			return false;
+		}
+	}, {
+		key: '_addConnectPiecesNumberBy',
+		value: function _addConnectPiecesNumberBy(piece, pieces, finded) {
+			if (piece == null) {
+				return;
+			}
+			var row = piece.props.row,
+			    col = piece.props.col;
+			var totalRow = pieces.length,
+			    totalCol = pieces[0].length;
+
+			var left = col - 1 >= 0 ? pieces[row][col - 1] : null;
+			if (left != null && left.getColor() == piece.getColor()) {
+				if (finded.indexOf(left) == -1) {
+					finded.push(left);
+					this._addConnectPiecesNumberBy(left, pieces, finded);
+				}
+			}
+
+			var right = col + 1 < totalCol ? pieces[row][col + 1] : null;
+			if (right != null && right.getColor() == piece.getColor()) {
+				if (finded.indexOf(right) == -1) {
+					finded.push(right);
+					this._addConnectPiecesNumberBy(right, pieces, finded);
+				}
+			}
+
+			var top = row - 1 >= 0 ? pieces[row - 1][col] : null;
+			if (top != null && top.getColor() == piece.getColor()) {
+				if (finded.indexOf(top) == -1) {
+					finded.push(top);
+					this._addConnectPiecesNumberBy(top, pieces, finded);
+				}
+			}
+
+			var bottom = row + 1 < totalRow ? pieces[row + 1][col] : null;
+			if (bottom != null && bottom.getColor() == piece.getColor()) {
+				if (finded.indexOf(bottom) == -1) {
+					finded.push(bottom);
+					this._addConnectPiecesNumberBy(bottom, pieces, finded);
+				}
+			}
+		}
+	}, {
+		key: '_getPieces',
+		value: function _getPieces() {
+			var pieces = [],
+			    piecesWithNum = [],
+			    blackPieces = [];
+			var row = this.state.data.length;
+			var col = this.state.data[0].length;
+			for (var i = 0; i < row; i++) {
+				var innerPieces = [];
+				for (var j = 0; j < col; j++) {
+					var piece = this.refs["p" + i + "_" + j];
+					if (piece.getValue() > 0) {
+						piecesWithNum.push(piece);
+					}
+					if (piece.getColor() == 0) {
+						blackPieces.push(piece);
+					}
+					innerPieces.push(piece);
+				}
+				pieces.push(innerPieces);
+			}
+			return [pieces, piecesWithNum, blackPieces];
+		}
+	}, {
+		key: '_onMousedownHandler',
+		value: function _onMousedownHandler() {
+			this.setState({
+				colorable: true
+			});
+		}
+	}, {
+		key: '_onMouseoutHandler',
+		value: function _onMouseoutHandler(e) {
+			if (e.target.className == "Map") {
+				this.setState({
+					colorable: false
+				});
+			}
+		}
+	}, {
+		key: '_onMouseupHandler',
+		value: function _onMouseupHandler() {
+			this.setState({
+				colorable: false
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this2 = this;
+
+			return _react2.default.createElement(
+				'div',
+				{ className: (0, _classnames2.default)({ "Map": true }), onMouseOut: this._onMouseoutHandler.bind(this) },
+				_react2.default.createElement(
+					'table',
+					{
+						onMouseDown: this._onMousedownHandler.bind(this),
+						onMouseUp: this._onMouseupHandler.bind(this) },
+					_react2.default.createElement(
+						'tbody',
+						null,
+						this.state.data.map(function (item, row) {
+							return _react2.default.createElement(
+								'tr',
+								{ key: row },
+								item.map(function (num, coll) {
+									return _react2.default.createElement(
+										'td',
+										{ key: coll },
+										_react2.default.createElement(_Piece2.default, { ref: "p" + row + "_" + coll, colorable: _this2.state.colorable, num: num, row: row, col: coll, key: coll })
+									);
+								})
+							);
+						}, this)
+					)
+				)
+			);
+		}
+	}]);
+
+	return Map;
+}(_react.Component);
+
+Map.propTypes = {
+	defaultData: _propTypes.PropTypes.arrayOf(_propTypes.PropTypes.arrayOf(_propTypes.PropTypes.number)).isRequired
+};
+
+exports.default = Map;
+},{"./Button":2,"./Piece":4,"classnames":6,"prop-types":11,"react":21}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _classnames = require('classnames');
@@ -223,6 +543,7 @@ var Piece = function (_Component) {
 		_this.state = {
 			num: props.num,
 			editable: props.editable,
+			colorable: props.colorable,
 			color: 1,
 			whiteFlag: false
 		};
@@ -235,6 +556,11 @@ var Piece = function (_Component) {
 			//document.addEventListener('contextmenu', this._handleContextMenu);
 		}
 	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+			this.setState({ colorable: nextProps.colorable });
+		}
+	}, {
 		key: 'getValue',
 		value: function getValue() {
 			return this.state.num;
@@ -245,9 +571,27 @@ var Piece = function (_Component) {
 			return this.state.color;
 		}
 	}, {
-		key: '_onClickHandler',
-		value: function _onClickHandler() {
-			if (this.state.num == 0) {
+		key: 'reset',
+		value: function reset() {
+			this.setState({
+				num: props.num,
+				editable: props.editable,
+				color: 1,
+				whiteFlag: false
+			});
+		}
+	}, {
+		key: '_onMousedownHandler',
+		value: function _onMousedownHandler(e) {
+			//e.button==0说明点击的是左键,e.button==2说明点击的是右键
+			if (this.state.num == 0 && e.button == 0) {
+				this._switchColor();
+			}
+		}
+	}, {
+		key: '_onMouseOverHandler',
+		value: function _onMouseOverHandler(e) {
+			if (this.state.num == 0 && this.state.colorable) {
 				this._switchColor();
 			}
 		}
@@ -255,6 +599,11 @@ var Piece = function (_Component) {
 		key: '_switchColor',
 		value: function _switchColor() {
 			var color = this.state.color == 0 ? 1 : 0;
+			if (color == 0) {
+				this.setState({
+					whiteFlag: false
+				});
+			}
 			this.setState({
 				color: color
 			});
@@ -266,8 +615,18 @@ var Piece = function (_Component) {
 			event.cancelBubble = true;
 			event.returnValue = false;
 			event.preventDefault();
-			var flag = !this.state.whiteFlag;
-			console.log(flag);
+			var flag = void 0;
+
+			if (this.state.color == 1) {
+				flag = !this.state.whiteFlag;
+			} else {
+				flag = 1;
+			}
+			if (flag) {
+				this.setState({
+					color: 1
+				});
+			}
 
 			this.setState({
 				whiteFlag: flag
@@ -281,7 +640,8 @@ var Piece = function (_Component) {
 			return _react2.default.createElement(
 				'div',
 				{ className: (0, _classnames2.default)({ 'Piece': true, 'black': this.state.color == 0 }),
-					onClick: this._onClickHandler.bind(this),
+					onMouseDown: this._onMousedownHandler.bind(this),
+					onMouseOver: this._onMouseOverHandler.bind(this),
 					onContextMenu: this._handleContextMenu.bind(this)
 				},
 				this._renderPieceContent()
@@ -294,13 +654,10 @@ var Piece = function (_Component) {
 			if (this.state.editable) {
 				return _react2.default.createElement('input', { type: 'text', defaultValue: content, maxLength: '2' });
 			} else {
+				if (this.state.whiteFlag && this.state.num == 0) {
+					return _react2.default.createElement('span', { className: 'blackPot' });
+				}
 				return content;
-			}
-			if (this.state.whiteFlag) {
-				this.setState({
-					color: 1
-				});
-				return _react2.default.createElement('span', { className: 'blackPot' });
 			}
 		}
 	}]);
@@ -310,7 +667,9 @@ var Piece = function (_Component) {
 
 Piece.propTypes = {
 	num: _propTypes.PropTypes.number,
-	editable: _propTypes.PropTypes.bool
+	editable: _propTypes.PropTypes.bool,
+	colorable: _propTypes.PropTypes.bool
+
 };
 
 Piece.defaultProps = {
@@ -319,7 +678,7 @@ Piece.defaultProps = {
 };
 
 exports.default = Piece;
-},{"classnames":4,"prop-types":9,"react":19}],3:[function(require,module,exports){
+},{"classnames":6,"prop-types":11,"react":21}],5:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -333,6 +692,10 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 var _Piece = require('./components/Piece');
 
 var _Piece2 = _interopRequireDefault(_Piece);
+
+var _Map = require('./components/Map');
+
+var _Map2 = _interopRequireDefault(_Map);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -351,9 +714,15 @@ _reactDom2.default.render(_react2.default.createElement(
 	),
 	_react2.default.createElement(_Piece2.default, { num: 5, editable: false }),
 	_react2.default.createElement(_Piece2.default, { num: 5, editable: true }),
-	_react2.default.createElement(_Piece2.default, null)
+	_react2.default.createElement(_Piece2.default, null),
+	_react2.default.createElement(
+		'h2',
+		null,
+		'Map'
+	),
+	_react2.default.createElement(_Map2.default, { defaultData: [[0, 0, 0, 1, 0], [0, 0, 0, 0, 0], [0, 2, 0, 0, 0], [0, 0, 0, 2, 0], [0, 0, 3, 0, 0]] })
 ), document.getElementById("pad"));
-},{"./components/Piece":2,"react":19,"react-dom":13}],4:[function(require,module,exports){
+},{"./components/Map":3,"./components/Piece":4,"react":21,"react-dom":15}],6:[function(require,module,exports){
 /*!
   Copyright (c) 2017 Jed Watson.
   Licensed under the MIT License (MIT), see
@@ -407,7 +776,7 @@ _reactDom2.default.render(_react2.default.createElement(
 	}
 }());
 
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -499,7 +868,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -605,7 +974,7 @@ checkPropTypes.resetWarningCache = function() {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":10,"_process":1}],7:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":12,"_process":1}],9:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -671,7 +1040,7 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
-},{"./lib/ReactPropTypesSecret":10}],8:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":12}],10:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -1266,7 +1635,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 };
 
 }).call(this,require('_process'))
-},{"./checkPropTypes":6,"./lib/ReactPropTypesSecret":10,"_process":1,"object-assign":5,"react-is":16}],9:[function(require,module,exports){
+},{"./checkPropTypes":8,"./lib/ReactPropTypesSecret":12,"_process":1,"object-assign":7,"react-is":18}],11:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -1289,7 +1658,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./factoryWithThrowingShims":7,"./factoryWithTypeCheckers":8,"_process":1,"react-is":16}],10:[function(require,module,exports){
+},{"./factoryWithThrowingShims":9,"./factoryWithTypeCheckers":10,"_process":1,"react-is":18}],12:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -1303,7 +1672,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (process){
 /** @license React v16.9.0
  * react-dom.development.js
@@ -26522,7 +26891,7 @@ module.exports = reactDom;
 }
 
 }).call(this,require('_process'))
-},{"_process":1,"object-assign":5,"prop-types/checkPropTypes":6,"react":19,"scheduler":24,"scheduler/tracing":25}],12:[function(require,module,exports){
+},{"_process":1,"object-assign":7,"prop-types/checkPropTypes":8,"react":21,"scheduler":26,"scheduler/tracing":27}],14:[function(require,module,exports){
 /** @license React v16.9.0
  * react-dom.production.min.js
  *
@@ -26802,7 +27171,7 @@ function Lj(a,b){if(!Hj(a))throw t(Error(299),"unstable_createRoot");return new 
 (function(a){var b=a.findFiberByHostInstance;return tj(m({},a,{overrideHookState:null,overrideProps:null,setSuspenseHandler:null,scheduleUpdate:null,currentDispatcherRef:Xb.ReactCurrentDispatcher,findHostInstanceByFiber:function(a){a=qd(a);return null===a?null:a.stateNode},findFiberByHostInstance:function(a){return b?b(a):null},findHostInstancesForRefresh:null,scheduleRefresh:null,scheduleRoot:null,setRefreshHandler:null,getCurrentFiber:null}))})({findFiberByHostInstance:Ha,bundleType:0,version:"16.9.0",
 rendererPackageName:"react-dom"});var Oj={default:Nj},Pj=Oj&&Nj||Oj;module.exports=Pj.default||Pj;
 
-},{"object-assign":5,"react":19,"scheduler":24}],13:[function(require,module,exports){
+},{"object-assign":7,"react":21,"scheduler":26}],15:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -26844,7 +27213,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-dom.development.js":11,"./cjs/react-dom.production.min.js":12,"_process":1}],14:[function(require,module,exports){
+},{"./cjs/react-dom.development.js":13,"./cjs/react-dom.production.min.js":14,"_process":1}],16:[function(require,module,exports){
 (function (process){
 /** @license React v16.9.0
  * react-is.development.js
@@ -27080,7 +27449,7 @@ exports.isSuspense = isSuspense;
 }
 
 }).call(this,require('_process'))
-},{"_process":1}],15:[function(require,module,exports){
+},{"_process":1}],17:[function(require,module,exports){
 /** @license React v16.9.0
  * react-is.production.min.js
  *
@@ -27097,7 +27466,7 @@ exports.ConcurrentMode=m;exports.ContextConsumer=k;exports.ContextProvider=h;exp
 exports.isValidElementType=function(a){return"string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||a===q||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n||a.$$typeof===v||a.$$typeof===w)};exports.isAsyncMode=function(a){return y(a)||x(a)===l};exports.isConcurrentMode=y;exports.isContextConsumer=function(a){return x(a)===k};exports.isContextProvider=function(a){return x(a)===h};
 exports.isElement=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===c};exports.isForwardRef=function(a){return x(a)===n};exports.isFragment=function(a){return x(a)===e};exports.isLazy=function(a){return x(a)===t};exports.isMemo=function(a){return x(a)===r};exports.isPortal=function(a){return x(a)===d};exports.isProfiler=function(a){return x(a)===g};exports.isStrictMode=function(a){return x(a)===f};exports.isSuspense=function(a){return x(a)===p};
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -27108,7 +27477,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-is.development.js":14,"./cjs/react-is.production.min.js":15,"_process":1}],17:[function(require,module,exports){
+},{"./cjs/react-is.development.js":16,"./cjs/react-is.production.min.js":17,"_process":1}],19:[function(require,module,exports){
 (function (process){
 /** @license React v16.9.0
  * react.development.js
@@ -29347,7 +29716,7 @@ module.exports = react;
 }
 
 }).call(this,require('_process'))
-},{"_process":1,"object-assign":5,"prop-types/checkPropTypes":6}],18:[function(require,module,exports){
+},{"_process":1,"object-assign":7,"prop-types/checkPropTypes":8}],20:[function(require,module,exports){
 /** @license React v16.9.0
  * react.production.min.js
  *
@@ -29374,7 +29743,7 @@ b,d){return W().useImperativeHandle(a,b,d)},useDebugValue:function(){},useLayout
 h({},a.props),g=a.key,k=a.ref,f=a._owner;if(null!=b){void 0!==b.ref&&(k=b.ref,f=J.current);void 0!==b.key&&(g=""+b.key);var l=void 0;a.type&&a.type.defaultProps&&(l=a.type.defaultProps);for(c in b)K.call(b,c)&&!L.hasOwnProperty(c)&&(e[c]=void 0===b[c]&&void 0!==l?l[c]:b[c])}c=arguments.length-2;if(1===c)e.children=d;else if(1<c){l=Array(c);for(var m=0;m<c;m++)l[m]=arguments[m+2];e.children=l}return{$$typeof:p,type:a.type,key:g,ref:k,props:e,_owner:f}},createFactory:function(a){var b=M.bind(null,a);
 b.type=a;return b},isValidElement:N,version:"16.9.0",unstable_withSuspenseConfig:function(a,b){var d=I.suspense;I.suspense=void 0===b?null:b;try{a()}finally{I.suspense=d}},__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentDispatcher:H,ReactCurrentBatchConfig:I,ReactCurrentOwner:J,IsSomeRendererActing:{current:!1},assign:h}},Y={default:X},Z=Y&&X||Y;module.exports=Z.default||Z;
 
-},{"object-assign":5}],19:[function(require,module,exports){
+},{"object-assign":7}],21:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -29385,7 +29754,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react.development.js":17,"./cjs/react.production.min.js":18,"_process":1}],20:[function(require,module,exports){
+},{"./cjs/react.development.js":19,"./cjs/react.production.min.js":20,"_process":1}],22:[function(require,module,exports){
 (function (process){
 /** @license React v0.15.0
  * scheduler-tracing.development.js
@@ -29855,7 +30224,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 }
 
 }).call(this,require('_process'))
-},{"_process":1}],21:[function(require,module,exports){
+},{"_process":1}],23:[function(require,module,exports){
 /** @license React v0.15.0
  * scheduler-tracing.production.min.js
  *
@@ -29867,7 +30236,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 
 'use strict';Object.defineProperty(exports,"__esModule",{value:!0});var b=0;exports.__interactionsRef=null;exports.__subscriberRef=null;exports.unstable_clear=function(a){return a()};exports.unstable_getCurrent=function(){return null};exports.unstable_getThreadID=function(){return++b};exports.unstable_trace=function(a,d,c){return c()};exports.unstable_wrap=function(a){return a};exports.unstable_subscribe=function(){};exports.unstable_unsubscribe=function(){};
 
-},{}],22:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function (process){
 /** @license React v0.15.0
  * scheduler.development.js
@@ -30772,7 +31141,7 @@ exports.unstable_getFirstCallbackNode = unstable_getFirstCallbackNode;
 }
 
 }).call(this,require('_process'))
-},{"_process":1}],23:[function(require,module,exports){
+},{"_process":1}],25:[function(require,module,exports){
 /** @license React v0.15.0
  * scheduler.production.min.js
  *
@@ -30797,7 +31166,7 @@ exports.unstable_scheduleCallback=function(a,b,c){var f=exports.unstable_now();i
 c}null===M&&N===a&&(S?g():S=!0,e(W,l-f))}else V(a,c),R||Q||(R=!0,d(X));return a};exports.unstable_cancelCallback=function(a){var b=a.next;if(null!==b){if(a===b)a===M?M=null:a===N&&(N=null);else{a===M?M=b:a===N&&(N=b);var c=a.previous;c.next=b;b.previous=c}a.next=a.previous=null}};exports.unstable_wrapCallback=function(a){var b=P;return function(){var c=P;P=b;try{return a.apply(this,arguments)}finally{P=c}}};exports.unstable_getCurrentPriorityLevel=function(){return P};
 exports.unstable_shouldYield=function(){var a=exports.unstable_now();U(a);return null!==O&&null!==M&&M.startTime<=a&&M.expirationTime<O.expirationTime||m()};exports.unstable_requestPaint=aa;exports.unstable_continueExecution=function(){R||Q||(R=!0,d(X))};exports.unstable_pauseExecution=function(){};exports.unstable_getFirstCallbackNode=function(){return M};
 
-},{}],24:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -30808,7 +31177,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler.development.js":22,"./cjs/scheduler.production.min.js":23,"_process":1}],25:[function(require,module,exports){
+},{"./cjs/scheduler.development.js":24,"./cjs/scheduler.production.min.js":25,"_process":1}],27:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -30819,4 +31188,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler-tracing.development.js":20,"./cjs/scheduler-tracing.production.min.js":21,"_process":1}]},{},[3]);
+},{"./cjs/scheduler-tracing.development.js":22,"./cjs/scheduler-tracing.production.min.js":23,"_process":1}]},{},[5]);

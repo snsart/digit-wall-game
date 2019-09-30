@@ -36,6 +36,7 @@ var Piece = function (_Component) {
 		_this.state = {
 			num: props.num,
 			editable: props.editable,
+			colorable: props.colorable,
 			color: 1,
 			whiteFlag: false
 		};
@@ -48,6 +49,11 @@ var Piece = function (_Component) {
 			//document.addEventListener('contextmenu', this._handleContextMenu);
 		}
 	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+			this.setState({ colorable: nextProps.colorable });
+		}
+	}, {
 		key: 'getValue',
 		value: function getValue() {
 			return this.state.num;
@@ -58,9 +64,27 @@ var Piece = function (_Component) {
 			return this.state.color;
 		}
 	}, {
-		key: '_onClickHandler',
-		value: function _onClickHandler() {
-			if (this.state.num == 0) {
+		key: 'reset',
+		value: function reset() {
+			this.setState({
+				num: props.num,
+				editable: props.editable,
+				color: 1,
+				whiteFlag: false
+			});
+		}
+	}, {
+		key: '_onMousedownHandler',
+		value: function _onMousedownHandler(e) {
+			//e.button==0说明点击的是左键,e.button==2说明点击的是右键
+			if (this.state.num == 0 && e.button == 0) {
+				this._switchColor();
+			}
+		}
+	}, {
+		key: '_onMouseOverHandler',
+		value: function _onMouseOverHandler(e) {
+			if (this.state.num == 0 && this.state.colorable) {
 				this._switchColor();
 			}
 		}
@@ -68,6 +92,11 @@ var Piece = function (_Component) {
 		key: '_switchColor',
 		value: function _switchColor() {
 			var color = this.state.color == 0 ? 1 : 0;
+			if (color == 0) {
+				this.setState({
+					whiteFlag: false
+				});
+			}
 			this.setState({
 				color: color
 			});
@@ -79,8 +108,18 @@ var Piece = function (_Component) {
 			event.cancelBubble = true;
 			event.returnValue = false;
 			event.preventDefault();
-			var flag = !this.state.whiteFlag;
-			console.log(flag);
+			var flag = void 0;
+
+			if (this.state.color == 1) {
+				flag = !this.state.whiteFlag;
+			} else {
+				flag = 1;
+			}
+			if (flag) {
+				this.setState({
+					color: 1
+				});
+			}
 
 			this.setState({
 				whiteFlag: flag
@@ -94,7 +133,8 @@ var Piece = function (_Component) {
 			return _react2.default.createElement(
 				'div',
 				{ className: (0, _classnames2.default)({ 'Piece': true, 'black': this.state.color == 0 }),
-					onClick: this._onClickHandler.bind(this),
+					onMouseDown: this._onMousedownHandler.bind(this),
+					onMouseOver: this._onMouseOverHandler.bind(this),
 					onContextMenu: this._handleContextMenu.bind(this)
 				},
 				this._renderPieceContent()
@@ -107,13 +147,10 @@ var Piece = function (_Component) {
 			if (this.state.editable) {
 				return _react2.default.createElement('input', { type: 'text', defaultValue: content, maxLength: '2' });
 			} else {
+				if (this.state.whiteFlag && this.state.num == 0) {
+					return _react2.default.createElement('span', { className: 'blackPot' });
+				}
 				return content;
-			}
-			if (this.state.whiteFlag) {
-				this.setState({
-					color: 1
-				});
-				return _react2.default.createElement('span', { className: 'blackPot' });
 			}
 		}
 	}]);
@@ -123,7 +160,9 @@ var Piece = function (_Component) {
 
 Piece.propTypes = {
 	num: _propTypes.PropTypes.number,
-	editable: _propTypes.PropTypes.bool
+	editable: _propTypes.PropTypes.bool,
+	colorable: _propTypes.PropTypes.bool
+
 };
 
 Piece.defaultProps = {

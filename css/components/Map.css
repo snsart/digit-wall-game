@@ -1,0 +1,17 @@
+.Map{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #CCCCCC;
+	width: 500px;
+	height: 500px;
+	min-width: 500px;
+	min-height: 500px;
+}
+
+.Map table{
+	width: 94%;
+	height: 94%;
+	background-color: #a2d9ff;
+}
+

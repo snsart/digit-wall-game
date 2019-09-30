@@ -12,14 +12,19 @@ class Piece extends Component{
 		this.state={
 			num:props.num,
 			editable:props.editable,
+			colorable:props.colorable,
 			color:1,
-			whiteFlag:false
+			whiteFlag:false,
 		}
 	}
 	
 	componentDidMount() {
         //document.addEventListener('contextmenu', this._handleContextMenu);
     };
+    
+    componentWillReceiveProps(nextProps){
+		this.setState({colorable:nextProps.colorable});
+	}
 	
 
 	getValue(){
@@ -30,17 +35,39 @@ class Piece extends Component{
 		return this.state.color;
 	}
 	
-	_onClickHandler(){
-		if(this.state.num==0){
+	reset(){
+		this.setState({
+			num:props.num,
+			editable:props.editable,
+			color:1,
+			whiteFlag:false
+		})
+	}
+	
+	_onMousedownHandler(e){
+		//e.button==0说明点击的是左键,e.button==2说明点击的是右键
+		if(this.state.num==0&&e.button==0){
+			this._switchColor();
+		}
+	}
+	
+	_onMouseOverHandler(e){
+		if(this.state.num==0&&this.state.colorable){
 			this._switchColor();
 		}
 	}
 	
 	_switchColor(){
 		let color=this.state.color==0?1:0;
+		if(color==0){
+			this.setState({
+				whiteFlag:false
+			})
+		}
 		this.setState({
 			color:color
 		})
+		
 	}
 	
 	_handleContextMenu(event){
@@ -48,8 +75,18 @@ class Piece extends Component{
 		event.cancelBubble = true;
     	event.returnValue = false;
     	event.preventDefault();
-    	let flag=!this.state.whiteFlag;
-    	console.log(flag);
+    	let flag;
+    	
+    	if(this.state.color==1){
+    		flag=!this.state.whiteFlag;
+    	}else{
+    		flag=1;
+    	}
+    	if(flag){
+    		this.setState({
+				color:1
+			})
+    	}
     	
     	this.setState({
 			whiteFlag:flag
@@ -61,7 +98,8 @@ class Piece extends Component{
 	render(){	
 		return (
 			<div className={classNames({'Piece':true,'black':this.state.color==0})} 
-				onClick={this._onClickHandler.bind(this)} 
+				onMouseDown={this._onMousedownHandler.bind(this)}
+				onMouseOver={this._onMouseOverHandler.bind(this)} 
 				onContextMenu={this._handleContextMenu.bind(this)}
 			>
 				{this._renderPieceContent()}
@@ -72,16 +110,13 @@ class Piece extends Component{
 	_renderPieceContent(){
 		let content=this.state.num==0?null:this.state.num;
 		if(this.state.editable){
-			return <input type="text" defaultValue={content} maxLength="2"/>;
+			return <input type="text" defaultValue={content} maxLength="2" />;
 		}else{
+			if(this.state.whiteFlag&&this.state.num==0){
+				return <span className="blackPot"></span>
+			}
 			return content;
-		}
-		if(this.state.whiteFlag){
-			this.setState({
-				color:1
-			})
-			return <span className="blackPot"></span>
-		}
+		}	
 	}
 	
 	
@@ -90,6 +125,8 @@ class Piece extends Component{
 Piece.propTypes={
 	num:PropTypes.number,
 	editable:PropTypes.bool,
+	colorable:PropTypes.bool,
+	
 }
 	
 Piece.defaultProps={
