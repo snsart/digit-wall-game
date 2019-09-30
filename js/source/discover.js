@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import Piece from './components/Piece';
 import Map from './components/Map';
+import Game from './components/Game';
 
 
 ReactDOM.render(
@@ -23,6 +24,9 @@ ReactDOM.render(
 					[0,0,0,2,0],
 					[0,0,3,0,0],
 		]}></Map>
+		
+		<h2>Game</h2>
+		<Game></Game>
 		
 	</div>,
 	document.getElementById("pad")

@@ -16,6 +16,10 @@ var _Map = require('./components/Map');
 
 var _Map2 = _interopRequireDefault(_Map);
 
+var _Game = require('./components/Game');
+
+var _Game2 = _interopRequireDefault(_Game);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _reactDom2.default.render(_react2.default.createElement(
@@ -39,5 +43,11 @@ _reactDom2.default.render(_react2.default.createElement(
 		null,
 		'Map'
 	),
-	_react2.default.createElement(_Map2.default, { defaultData: [[0, 0, 0, 1, 0], [0, 0, 0, 0, 0], [0, 2, 0, 0, 0], [0, 0, 0, 2, 0], [0, 0, 3, 0, 0]] })
+	_react2.default.createElement(_Map2.default, { defaultData: [[0, 0, 0, 1, 0], [0, 0, 0, 0, 0], [0, 2, 0, 0, 0], [0, 0, 0, 2, 0], [0, 0, 3, 0, 0]] }),
+	_react2.default.createElement(
+		'h2',
+		null,
+		'Game'
+	),
+	_react2.default.createElement(_Game2.default, null)
 ), document.getElementById("pad"));
