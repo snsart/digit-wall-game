@@ -1,0 +1,60 @@
+.Dialog{
+	width: 20000px;
+	height: 100%;
+	border-bottom: solid  1px #999999;
+}
+
+.DialogModal{
+	position: absolute;
+	display: flex;
+	justify-content:center;
+	align-items: center;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background-color: #00000088;
+	transition-duration: 0.5s;
+	transition-property: display;	
+}
+
+.DialogModalWrap{
+	position: relative;
+	width: 80%;
+	margin: 20px auto;
+}
+
+.DialogHeader{
+	font-size: 30px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #6f001b;
+	padding: 10px 20px;
+}
+
+.DialogBody{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	width: 100%;
+	background-color: white;
+	border-bottom: 1px solid #cccccc;
+}
+
+
+.DialogFooter{
+	padding: 10px 25px;
+	background-color: #cccccc;
+	text-align: right;
+}
+
+.DialogFooter .cancelBtn{
+	right: 0;
+}
+
+.DialogFooter .confirmBtn{
+	margin-left: 20px;
+	right: 0px;
+}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>digit-wall-game</name>
+	<name>digit-wall-game-pack</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -16,7 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1569565780269</id>
+			<id>1570500415292</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
