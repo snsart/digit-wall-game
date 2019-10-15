@@ -1,6 +1,6 @@
-const path=require("path");
-const webpack=require("webpack");
-const merge=require("webpack-merge");
+const path = require('path');
+const webpack = require('webpack');
+const merge = require("webpack-merge");
 
 const commonConfig=require('./webpack.common.js');
 
@@ -9,7 +9,7 @@ const devConfig={
    	devServer:{
    		contentBase:'./dist',
    		open:true,
-   		port:8090,
+   		port:8080,
    		hot:true,
    		hotOnly:true
    	},
